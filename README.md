@@ -1,8 +1,11 @@
 Site for the marriage of Ken & Juliet.
 
 ToDo:
-Get URL
-Get AWS hosting
+xGet URL
+xGet AWS hosting
+
+https
+
 Zoom to location/ring marker - plus margin
 Add button to rezoom to location/ring marker
 

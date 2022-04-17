@@ -167,7 +167,7 @@ function initMap(): void {
     // Allocate a map, set to the destination and zoom in pretty far.
     const map = new google.maps.Map(document.getElementById("map") as HTMLElement, {
 
-        zoom: 1,
+        zoom: 10,
         center: centerPoint,
     });
 
