@@ -167,7 +167,8 @@ function initMap(): void {
     // Allocate a map, set to the destination and zoom in pretty far.
     const map = new google.maps.Map(document.getElementById("map") as HTMLElement, {
 
-        zoom: 10,
+        zoom: 14,
+        mapTypeId: google.maps.MapTypeId.HYBRID,
         center: centerPoint,
     });
 
@@ -175,23 +176,12 @@ function initMap(): void {
     const ringMarker = new google.maps.Marker({
 
         position: myLatLng,
-        icon: {
-            path: icon.icon[4] as string,
-            fillColor: "#ffff88",
-            fillOpacity: 1,
-            anchor: new google.maps.Point(
-                icon.icon[0] / 2, // width
-                icon.icon[1] // height
-            ),
-            strokeWeight: 1,
-            strokeColor: "#000000",
-            scale: 0.075,
-          },
+        icon: `./55.png`,
         map,
         animation: google.maps.Animation.DROP,
         zIndex: 2
     });
-    attachInstructionText(ringMarker, "Ring Marks the spot!");
+    attachInstructionText(ringMarker, "Rings mark the spot!");
 
     // Define the poly line representing the trail to the knot spot.
     let flightPath = new google.maps.Polyline({
@@ -222,6 +212,47 @@ function initMap(): void {
         icons[0].offset = `${percent}%`;
         flightPath.set("icons", icons);
     }, 50);
+
+    let directionsService = new google.maps.DirectionsService();
+    let directionsDisplay = new google.maps.DirectionsRenderer();
+
+    // Try HTML5 geolocation.
+    if (navigator.geolocation) {
+
+        navigator.geolocation.getCurrentPosition((position: GeolocationPosition) => {
+
+            const pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+            };
+
+            var bounds = new google.maps.LatLngBounds();
+            bounds.extend(myLatLng);
+            bounds.extend(pos);
+            map.fitBounds(bounds);
+
+            var request = {
+
+                origin: pos,
+                destination: myLatLng,
+                travelMode: google.maps.TravelMode.DRIVING
+            };
+            directionsService.route(request, (response, status) => {
+
+                if (status == "OK") {
+
+                    directionsDisplay.setDirections(response);
+                }
+            });
+        }, () => {
+
+            // handleLocationError(true, infoWindow, map.getCenter()!);
+        });
+    } else {
+
+        // Browser doesn't support Geolocation
+        // handleLocationError(false, infoWindow, map.getCenter()!);
+    }
 
     // Reset the exiting markers and process the coordinates into markers.
     const updateMarkers = () => {
@@ -270,6 +301,21 @@ function initMap(): void {
         });
         attachInstructionText(home, "our home in Weston");
         markers.push(home);
+
+        // Also add the pent road disclaimer.
+        const pent = new google.maps.Marker({
+
+            position: { 
+                "lat": 41.237507629670944,
+                "lng": -73.3964314082411
+            },
+            map,
+            label: "X",
+            animation: google.maps.Animation.DROP,
+        });
+        attachInstructionText(pent, "oddly, this part of Pent Road does not exist!  Please disregard.  Avoid driving into the woods!");
+        markers.push(pent);
+
     };
     updateMarkers();
 
