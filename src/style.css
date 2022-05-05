@@ -21,12 +21,13 @@ body {
     left: 12px;
     top: 12px;
     right: 12px;
-    bottom: 12px;
+    bottom: 20%;
     background: rgba(255, 255, 255, 0.7);
     border: 1px solid grey;
     font-family: 'Tangerine', cursive;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     border-bottom-left-radius: 10px;
     border-top-right-radius: 10px;
 }
