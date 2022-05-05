@@ -4,7 +4,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "build": "webpack --config ./webpack.config.js --mode production",
-    "prod": "sudo node index",
+    "prod": "sudo \"$(which node)\" index",
     "dev": "webpack serve --config  ./webpack.config.js --mode development"
   },
   "devDependencies": {
