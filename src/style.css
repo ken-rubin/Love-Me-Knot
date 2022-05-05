@@ -46,7 +46,7 @@ body {
 
 .LargeText {
 
-    font-size: min(13vh, 13vw);
+    font-size: min(11vh, 11vw);
 }
 
 .NormalText {
