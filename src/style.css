@@ -15,20 +15,42 @@ body {
     background-size:cover;
 }
 
+/* width */
+::-webkit-scrollbar {
+    width: 4px;
+    padding-right: 4px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+
 #cover {
 
     position:absolute;
     left: 12px;
     top: 12px;
     right: 12px;
+    bottom: 100px;
     background: rgba(255, 255, 255, 0.7);
     border: 1px solid grey;
     font-family: 'Tangerine', cursive;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border-bottom-left-radius: 10px;
-    border-top-right-radius: 10px;
+    overflow-y: auto;
 }
 
 .SpacingDiv {
@@ -39,7 +61,7 @@ body {
 
 .BoldText {
 
-    font-size: min(16vh, 14vw);
+    font-size: min(16vh, 10vw);
     font-weight: bold;
 }
 

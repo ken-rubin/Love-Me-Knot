@@ -4,8 +4,6 @@ import "./style.css";
 // initMap is specified in the HTML as the "callback" parameter to the Google API.
 function initMap(): void {
 
-    screen.orientation.lock("portrait");
-
     // Destination location.
     const myLatLng = {
 
