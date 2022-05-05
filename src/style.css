@@ -21,7 +21,6 @@ body {
     left: 12px;
     top: 12px;
     right: 12px;
-    bottom: 20%;
     background: rgba(255, 255, 255, 0.7);
     border: 1px solid grey;
     font-family: 'Tangerine', cursive;
@@ -40,23 +39,23 @@ body {
 
 .BoldText {
 
-    font-size: min(16vh, 16vw);
+    font-size: min(16vh, 14vw);
     font-weight: bold;
 }
 
 .LargeText {
 
-    font-size: min(11vh, 11vw);
+    font-size: min(11vh, 9vw);
 }
 
 .NormalText {
 
-    font-size: min(10vh, 10vw);
+    font-size: min(10vh, 8vw);
 }
 
 .SmallText {
 
-    font-size: min(7vh, 7vw);
+    font-size: min(7vh, 5vw);
 }    
 
 .ContainerDiv {
