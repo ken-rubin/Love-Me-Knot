@@ -215,6 +215,8 @@ function initMap(): void {
 
     let directionsService = new google.maps.DirectionsService();
     let directionsDisplay = new google.maps.DirectionsRenderer();
+    directionsDisplay.setMap(map);
+    let geocoder = new google.maps.Geocoder();              
 
     // Try HTML5 geolocation.
     if (navigator.geolocation) {
@@ -227,23 +229,44 @@ function initMap(): void {
             };
 
             var bounds = new google.maps.LatLngBounds();
-            bounds.extend(myLatLng);
+            bounds.extend({ 
+                "lat": 41.237507629670944,
+                "lng": -73.3964314082411
+            });
             bounds.extend(pos);
             map.fitBounds(bounds);
 
-            var request = {
+            geocoder
+                .geocode({
 
-                origin: pos,
-                destination: myLatLng,
-                travelMode: google.maps.TravelMode.DRIVING
-            };
-            directionsService.route(request, (response, status) => {
+                    address: "33 Pent Rd, Weston, CT 06883"
+                })
+                .then((result) => {
+    
+                    const { results } = result;
 
-                if (status == "OK") {
+                    var request = {
 
-                    directionsDisplay.setDirections(response);
-                }
-            });
+                        origin: pos,
+                        destination: results[0].geometry.location,
+                        travelMode: google.maps.TravelMode.DRIVING
+                    };
+                    directionsService.route(request, (response, status) => {
+        
+                        if (status == "OK") {
+        
+                            directionsDisplay.setDirections(response);
+                        }
+                    });
+        
+
+
+                })
+                .catch((e) => {
+            
+                    alert("Geocode was not successful for the following reason: " + e);
+                });
+
         }, () => {
 
             // handleLocationError(true, infoWindow, map.getCenter()!);
