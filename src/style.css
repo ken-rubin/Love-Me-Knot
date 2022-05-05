@@ -56,7 +56,7 @@ body {
 
 .SmallText {
 
-    font-size: min(6vh, 6vw);
+    font-size: min(7vh, 7vw);
 }    
 
 .ContainerDiv {
@@ -65,8 +65,9 @@ body {
 
     flex: 0 0 auto;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
 
     margin: 4px;
 }
