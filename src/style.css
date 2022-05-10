@@ -1,12 +1,12 @@
 html {
 
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
 body {
-
+  
     height: 100%;
     margin: 0;
     padding: 0;
@@ -14,28 +14,11 @@ body {
     background-repeat: no-repeat;
     background-size:cover;
 }
-
-/* width */
+  
 ::-webkit-scrollbar {
-    width: 4px;
-    padding-right: 4px;
-  }
-  
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.1);
-  }
 
+    width: 0px;
+}
 
 #cover {
 
@@ -43,7 +26,7 @@ body {
     left: 12px;
     top: 12px;
     right: 12px;
-    bottom: 100px;
+    bottom: 50px;
     background: rgba(255, 255, 255, 0.7);
     border: 1px solid grey;
     font-family: 'Tangerine', cursive;
@@ -53,31 +36,19 @@ body {
     overflow-y: auto;
 }
 
-.SpacingDiv {
-
-    flex: 0 0 auto;
-    height: 5%;
-}
-
 .BoldText {
 
-    font-size: min(16vh, 10vw);
     font-weight: bold;
 }
 
 .LargeText {
 
-    font-size: min(11vh, 9vw);
-}
-
-.NormalText {
-
-    font-size: min(10vh, 8vw);
+    font-size: min(16vh, 14vw);
 }
 
 .SmallText {
 
-    font-size: min(7vh, 5vw);
+    font-size: min(12vh, 8vw);
 }    
 
 .ContainerDiv {
@@ -100,6 +71,33 @@ body {
     flex: 0 0 auto;
 
     margin: 4px;
+}
+
+#BottomRow {
+
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.FakeButton {
+
+    margin-left: 40px;
+    margin-right: 40px;
+    flex: 0 0 auto;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 4px;
+    padding-bottom: 8px;
+    background: white;
+    border: 1px solid black;
+    border-radius: 6px;
+    width: 100px;
+    text-align: center;
 }
 
 /* Always set the map height explicitly to define the size of the div element that contains the map. */
