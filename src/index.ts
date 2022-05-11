@@ -1,8 +1,87 @@
 import { faRing as icon } from "@fortawesome/free-solid-svg-icons";
 import "./style.css";
 
+let firstShow = true;
+
 // initMap is specified in the HTML as the "callback" parameter to the Google API.
 function initMap(): void {
+
+    const theMapElement = document.getElementById("map");
+    const theMapButton = document.getElementById("MapButton");
+    theMapButton?.addEventListener("click", () => {
+
+        const show = theMapElement?.classList.contains("hidden");
+        console.log(show);
+        if (show) {
+
+            theMapElement?.classList.remove("hidden");
+
+            if (firstShow) {
+
+                firstShow = false;
+
+                // Try HTML5 geolocation.
+                if (navigator.geolocation) {
+
+                    navigator.geolocation.getCurrentPosition((position: GeolocationPosition) => {
+
+                        const pos = {
+
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude,
+                        };
+
+                        var bounds = new google.maps.LatLngBounds();
+                        bounds.extend({ 
+
+                            "lat": 41.237507629670944,
+                            "lng": -73.3964314082411
+                        });
+                        bounds.extend(pos);
+                        map.fitBounds(bounds);
+
+                        geocoder
+                            .geocode({
+
+                                address: "33 Pent Rd, Weston, CT 06883"
+                            })
+                            .then((result) => {
+
+                                const { results } = result;
+
+                                var request = {
+
+                                    origin: pos,
+                                    destination: results[0].geometry.location,
+                                    travelMode: google.maps.TravelMode.DRIVING
+                                };
+                                directionsService.route(request, (response, status) => {
+
+                                    if (status == "OK") {
+
+                                        directionsDisplay.setDirections(response);
+                                    }
+                                });
+                            })
+                            .catch((e) => {
+
+                                alert("Geocode was not successful for the following reason: " + e);
+                            });
+                    }, () => {
+
+                        // handleLocationError(true, infoWindow, map.getCenter()!);
+                    });
+                } else {
+
+                    // Browser doesn't support Geolocation
+                    // handleLocationError(false, infoWindow, map.getCenter()!);
+                }
+            }
+        } else {
+
+            theMapElement?.classList.add("hidden");
+        }
+    });
 
     // Destination location.
     const myLatLng = {
@@ -217,65 +296,6 @@ function initMap(): void {
     let directionsDisplay = new google.maps.DirectionsRenderer();
     directionsDisplay.setMap(map);
     let geocoder = new google.maps.Geocoder();              
-
-    // Try HTML5 geolocation.
-    if (navigator.geolocation) {
-
-        navigator.geolocation.getCurrentPosition((position: GeolocationPosition) => {
-
-            const pos = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude,
-            };
-
-            var bounds = new google.maps.LatLngBounds();
-            bounds.extend({ 
-                "lat": 41.237507629670944,
-                "lng": -73.3964314082411
-            });
-            bounds.extend(pos);
-            map.fitBounds(bounds);
-
-            geocoder
-                .geocode({
-
-                    address: "33 Pent Rd, Weston, CT 06883"
-                })
-                .then((result) => {
-    
-                    const { results } = result;
-
-                    var request = {
-
-                        origin: pos,
-                        destination: results[0].geometry.location,
-                        travelMode: google.maps.TravelMode.DRIVING
-                    };
-                    directionsService.route(request, (response, status) => {
-        
-                        if (status == "OK") {
-        
-                            directionsDisplay.setDirections(response);
-                        }
-                    });
-        
-
-
-                })
-                .catch((e) => {
-            
-                    alert("Geocode was not successful for the following reason: " + e);
-                });
-
-        }, () => {
-
-            // handleLocationError(true, infoWindow, map.getCenter()!);
-        });
-    } else {
-
-        // Browser doesn't support Geolocation
-        // handleLocationError(false, infoWindow, map.getCenter()!);
-    }
 
     // Reset the exiting markers and process the coordinates into markers.
     const updateMarkers = () => {
