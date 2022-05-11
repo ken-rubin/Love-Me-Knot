@@ -17,7 +17,7 @@
     <div id="cover">
         <div class="ContainerDiv">
             <div class="RowDiv SmallText">~</div>
-            <div id="InviteeDiv" class="RowDiv SmallText BoldText">Hillary & Drew</div>
+            <div id="InviteeDiv" class="RowDiv SmallText BoldText"></div>
         </div>
         <div class="ContainerDiv">
             <div class="RowDiv SmallText">You are cordially invited to</div>
@@ -43,7 +43,17 @@
 
     <div id="map" class="hidden"></div>
 
-    <textarea id="points" spellcheck="false"></textarea>
+    <div id="confirm" class="hidden">
+        <div class="ContainerDiv">
+            <div class="RowDiv SmallText">Please update the attendee list</div>
+            <div class="RowDiv">&nbsp;</div>
+            <textarea class="RowDiv PunyText" id="AtendeesTextArea" rows=3 spellcheck="false"></textarea>
+            <div class="RowDiv">&nbsp;</div>
+            <div id="SendConfirmButton" class="FakeButton SmallText">send</div>
+        </div>
+    </div>
+
+    <textarea id="points" class="hidden" spellcheck="false"></textarea>
 
     <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
     <script

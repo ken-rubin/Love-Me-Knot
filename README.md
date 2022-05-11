@@ -20,7 +20,9 @@ Talk to directions api and add directions to dom and augment directions with the
 - always have directions start where you are and go to pent road parking lot
 
 
-
+git config --global user.name "Ken Rubin"
+git config --global user.email "ken.rubin@live.com"
+git config --global user.password "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"
 
 ===========================
 2:20pm june 14th

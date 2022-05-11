@@ -1,81 +1,124 @@
 import { faRing as icon } from "@fortawesome/free-solid-svg-icons";
 import "./style.css";
 
-let firstShow = true;
-
 // initMap is specified in the HTML as the "callback" parameter to the Google API.
 function initMap(): void {
 
+    // Get the edit query string parameter to determine if the editor window and clickable map should be enabled.
+    interface MyParams {
+        edit: boolean;
+        he: string;
+        she: string;
+    }
+    const params:MyParams = <MyParams><unknown>new Proxy(new URLSearchParams(window.location.search), {
+
+        get: (searchParams, prop) => searchParams.get(<string>prop),
+    });
+    // Get the value of "edit" key.
+    let editValue = params.edit;
+    
+    const theCoverElement = document.getElementById("cover");
+    const theInviteeDiv = document.getElementById("InviteeDiv");
     const theMapElement = document.getElementById("map");
+    const theConfirmElement = document.getElementById("confirm");
     const theMapButton = document.getElementById("MapButton");
+    const theConfirmButton = document.getElementById("ConfirmButton");
+    const theAtendeesTextArea:HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById("AtendeesTextArea");
+
+    if (theAtendeesTextArea) {
+
+        theAtendeesTextArea.value = `${params.she}${'\n'}${params.he}`
+    }
+
+    // Try to get invitees from the query strings.
+    if (theInviteeDiv) {
+
+        theInviteeDiv.innerText = `${params.she} and ${params.he}`;
+    }
+
+    theConfirmButton?.addEventListener("click", () => {
+
+        const show = theConfirmElement?.classList.contains("hidden");
+        console.log(show);
+        if (show) {
+
+            theMapElement?.classList.add("hidden");
+            theConfirmElement?.classList.remove("hidden");
+            theCoverElement?.classList.add("totallytransparent");
+        } else {
+
+            theConfirmElement?.classList.add("hidden");
+            theCoverElement?.classList.remove("totallytransparent");
+        }
+    });
+
     theMapButton?.addEventListener("click", () => {
 
         const show = theMapElement?.classList.contains("hidden");
         console.log(show);
         if (show) {
 
+            theConfirmElement?.classList.add("hidden");
             theMapElement?.classList.remove("hidden");
 
-            if (firstShow) {
+            // Try HTML5 geolocation.
+            if (navigator.geolocation) {
 
-                firstShow = false;
+                navigator.geolocation.getCurrentPosition((position: GeolocationPosition) => {
 
-                // Try HTML5 geolocation.
-                if (navigator.geolocation) {
+                    const pos = {
 
-                    navigator.geolocation.getCurrentPosition((position: GeolocationPosition) => {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                    };
 
-                        const pos = {
+                    var bounds = new google.maps.LatLngBounds();
+                    bounds.extend({ 
 
-                            lat: position.coords.latitude,
-                            lng: position.coords.longitude,
-                        };
-
-                        var bounds = new google.maps.LatLngBounds();
-                        bounds.extend({ 
-
-                            "lat": 41.237507629670944,
-                            "lng": -73.3964314082411
-                        });
-                        bounds.extend(pos);
-                        map.fitBounds(bounds);
-
-                        geocoder
-                            .geocode({
-
-                                address: "33 Pent Rd, Weston, CT 06883"
-                            })
-                            .then((result) => {
-
-                                const { results } = result;
-
-                                var request = {
-
-                                    origin: pos,
-                                    destination: results[0].geometry.location,
-                                    travelMode: google.maps.TravelMode.DRIVING
-                                };
-                                directionsService.route(request, (response, status) => {
-
-                                    if (status == "OK") {
-
-                                        directionsDisplay.setDirections(response);
-                                    }
-                                });
-                            })
-                            .catch((e) => {
-
-                                alert("Geocode was not successful for the following reason: " + e);
-                            });
-                    }, () => {
-
-                        // handleLocationError(true, infoWindow, map.getCenter()!);
+                        "lat": 41.237507629670944,
+                        "lng": -73.3964314082411
                     });
-                } else {
+                    bounds.extend(pos);
+                    map.fitBounds(bounds);
 
-                    // Browser doesn't support Geolocation
-                    // handleLocationError(false, infoWindow, map.getCenter()!);
-                }
+                    geocoder.geocode({
+
+                            location: {
+
+                                "lat": 41.23715,
+                                "lng": -73.39581727981567,
+                            } //address:"33 Pent Rd, Weston, CT 06883"
+                        })
+                        .then((result) => {
+
+                            const { results } = result;
+
+                            var request = {
+
+                                origin: pos,
+                                destination: results[0].geometry.location,
+                                travelMode: google.maps.TravelMode.DRIVING
+                            };
+                            directionsService.route(request, (response, status) => {
+
+                                if (status == "OK") {
+
+                                    directionsDisplay.setDirections(response);
+                                }
+                            });
+                        })
+                        .catch((e) => {
+
+                            alert("Geocode was not successful for the following reason: " + e);
+                        });
+                }, () => {
+
+                    // handleLocationError(true, infoWindow, map.getCenter()!);
+                });
+            } else {
+
+                // Browser doesn't support Geolocation
+                // handleLocationError(false, infoWindow, map.getCenter()!);
             }
         } else {
 
@@ -319,7 +362,12 @@ function initMap(): void {
 
                     position: coordinate,
                     map,
-                    label: coordinate.label,
+                    label:  {
+
+                        text: coordinate.label || "",
+                        color: 'yellow',
+                        fontSize: "4vh"
+                      },
                     animation: google.maps.Animation.DROP,
                 });
                 if (coordinate.message) {
@@ -339,7 +387,12 @@ function initMap(): void {
                 "lng": -73.38364621526185 
             },
             map,
-            label: "home",
+            label:  {
+
+                text: "home",
+                color: 'yellow',
+                fontSize: "4vh"
+            },
             animation: google.maps.Animation.DROP,
         });
         attachInstructionText(home, "our home in Weston");
@@ -353,7 +406,12 @@ function initMap(): void {
                 "lng": -73.3964314082411
             },
             map,
-            label: "X",
+            label:  {
+
+                text: "X",
+                color: 'yellow',
+                fontSize: "4vh"
+            },
             animation: google.maps.Animation.DROP,
         });
         attachInstructionText(pent, "oddly, this part of Pent Road does not exist!  Please disregard.  Avoid driving into the woods!");
@@ -362,20 +420,10 @@ function initMap(): void {
     };
     updateMarkers();
 
-    // Get the edit query string parameter to determine if the editor window and clickable map should be enabled.
-    interface MyParams {
-        edit: boolean;
-    }
-    const params:MyParams = <MyParams><unknown>new Proxy(new URLSearchParams(window.location.search), {
-
-        get: (searchParams, prop) => searchParams.get(<string>prop),
-    });
-    // Get the value of "edit" key.
-    let editValue = params.edit;
-
     const ta:HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById("points");
     if (editValue && ta) {
 
+        ta.classList.remove("hidden");
         ta.value = JSON.stringify(coordinates, null, 2);
         ta.addEventListener("input", (e) => {
 
@@ -394,9 +442,6 @@ function initMap(): void {
             updateMarkers();
             ta.value = JSON.stringify(coordinates, null, 2);
         });
-    } else if (ta) {
-
-        ta.classList.add("hidden");
     }
 
     // Change markers on zoom.
