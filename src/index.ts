@@ -24,10 +24,32 @@ function initMap(): void {
     const theMapButton = document.getElementById("MapButton");
     const theConfirmButton = document.getElementById("ConfirmButton");
     const theAtendeesTextArea:HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById("AtendeesTextArea");
+    const theSendConfirmButton = document.getElementById("SendConfirmButton");
 
     if (theAtendeesTextArea) {
 
-        theAtendeesTextArea.value = `${params.she}${'\n'}${params.he}`
+        fetch(`/get`, {
+
+            method: 'POST',
+            headers: {
+
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ "she": params.she, "he": params.he, attendies: theAtendeesTextArea.value })
+        }).then((response) => {
+
+            return response.json();
+        }).then((data) => {
+
+            console.log(`...back from server.`);
+            if (!data.success) {
+
+                alert(new Error(data.payload));
+            } else {
+
+                theAtendeesTextArea.value = data.payload;
+            }
+        });        
     }
 
     // Try to get invitees from the query strings.
@@ -35,6 +57,29 @@ function initMap(): void {
 
         theInviteeDiv.innerText = `${params.she} and ${params.he}`;
     }
+
+    theSendConfirmButton?.addEventListener("click", () => {
+
+        fetch(`/set`, {
+
+            method: 'POST',
+            headers: {
+
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ "she": params.she, "he": params.he, attendies: theAtendeesTextArea.value })
+        }).then((response) => {
+
+            return response.json();
+        }).then((data) => {
+
+            console.log(`...back from server.`);
+            if (!data.success) {
+
+                alert(new Error(data.payload));
+            }
+        });
+    });
 
     theConfirmButton?.addEventListener("click", () => {
 
@@ -60,6 +105,7 @@ function initMap(): void {
 
             theConfirmElement?.classList.add("hidden");
             theMapElement?.classList.remove("hidden");
+            theCoverElement?.classList.remove("totallytransparent");
 
             // Try HTML5 geolocation.
             if (navigator.geolocation) {
@@ -123,6 +169,7 @@ function initMap(): void {
         } else {
 
             theMapElement?.classList.add("hidden");
+            theCoverElement?.classList.remove("totallytransparent");
         }
     });
 
@@ -414,7 +461,7 @@ function initMap(): void {
             },
             animation: google.maps.Animation.DROP,
         });
-        attachInstructionText(pent, "oddly, this part of Pent Road does not exist!  Please disregard.  Avoid driving into the woods!");
+        attachInstructionText(pent, "Oddly, this part of Pent Road does not exist!  Please disregard.  Avoid driving into the woods!");
         markers.push(pent);
 
     };

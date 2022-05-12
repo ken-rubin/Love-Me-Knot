@@ -20,6 +20,11 @@ body {
     font-family: 'Tangerine', cursive;
 }
   
+#AtendeesTextArea {
+
+    font-family: 'Tangerine', cursive;
+}
+
 ::-webkit-scrollbar {
 
     width: 0px;
@@ -157,8 +162,8 @@ body {
     
     height: min(18vh, 12vw);
     margin: 1vh;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 4vw;
+    padding-right: 4vw;
 }
 
 #points {
@@ -171,6 +176,7 @@ body {
     resize: none;
     opacity: 0.5;
 }
+
 .hidden {
     
     display: none !important;
