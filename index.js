@@ -17,7 +17,21 @@ https.createServer({
 
         try {
 
-            const pathname = `./attendies/${req.body.she}${req.body.he}.dat`;
+            if (!req.body.she && !req.body.he) {
+
+                throw new Error(`Must specify attendee.`);
+            }
+            let pathname = null;
+            if (req.body.she && req.body.he) {
+
+                pathname = `./attendies/${req.body.she}${req.body.he}.dat`;
+            } else if (req.body.she) {
+
+                pathname = `./attendies/${req.body.she}.dat`;
+            } else {
+
+                pathname = `./attendies/${req.body.he}.dat`;
+            }
             if (fs.existsSync(pathname)) {
 
                 fs.unlinkSync(pathname)
@@ -45,8 +59,25 @@ https.createServer({
 
         try {
 
-            let data = `${req.body.she}${'\n'}${req.body.he}`;
-            const pathname = `./attendies/${req.body.she}${req.body.he}.dat`;
+            if (!req.body.she && !req.body.he) {
+
+                throw new Error(`Must specify attendee.`);
+            }
+            let data = null;
+            let pathname = null;
+            if (req.body.she && req.body.he) {
+
+                data = `${req.body.she}${'\n'}${req.body.he}`;
+                pathname = `./attendies/${req.body.she}${req.body.he}.dat`;
+            } else if (req.body.she) {
+
+                data = `${req.body.she}`;
+                pathname = `./attendies/${req.body.she}.dat`;
+            } else {
+
+                data = `${req.body.he}`;
+                pathname = `./attendies/${req.body.he}.dat`;
+            }
             if (fs.existsSync(pathname)) {
 
                 data = fs.readFileSync(pathname,

@@ -55,7 +55,7 @@ function initMap(): void {
     // Try to get invitees from the query strings.
     if (theInviteeDiv) {
 
-        theInviteeDiv.innerText = `${params.she} and ${params.he}`;
+        theInviteeDiv.innerText = (params.she && params.he ? `${params.she} & ${params.he}` : (params.she ? params.she : params.he));
     }
 
     theSendConfirmButton?.addEventListener("click", () => {
@@ -499,7 +499,7 @@ function initMap(): void {
         // iterate over markers and call setVisible
         for (let i = 0; i < markers.length; i++) {
         
-            markers[i].setVisible(zoom > 15);
+            markers[i].setVisible(zoom > 18);
         }
     };
     setTimeout(onZoom, 
