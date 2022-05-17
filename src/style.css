@@ -71,7 +71,7 @@ body {
     flex: 0 0 auto;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
 
     margin: 4px;
@@ -84,6 +84,9 @@ body {
     flex: 0 0 auto;
 
     margin: 4px;
+
+    display: flex;
+    flex-direction: row;
 }
 
 #BottomRow {
@@ -154,7 +157,7 @@ body {
 
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     overflow-y: auto;
 }
 
@@ -175,13 +178,13 @@ body {
     width: 250px;
     resize: none;
     opacity: 0.5;
+    z-index: 1000000;
 }
 
 .hidden {
     
     display: none !important;
 }
-
 
 .totallytransparent {
     
@@ -191,4 +194,33 @@ body {
 .gm-style-iw.gm-style-iw-c {
 
     font-size: 2vh;
+}
+
+#FredImage {
+
+    flex: 0 1 auto;
+
+    max-height: min(18vh, 12vw);
+    width: auto;
+    height: auto;
+    opacity: 0.001;
+    content: url(./fred.png);
+    margin-top: min(1.8vh, 1.2vw);
+}
+
+.AnmiateFadeIn {
+
+    animation: fadeIn 2.5s forwards;
+}
+
+@keyframes fadeIn {
+
+    0% {
+
+        opacity:0.001;
+    }
+    100% {
+
+        opacity:1;
+    }
 }

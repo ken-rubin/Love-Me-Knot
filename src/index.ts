@@ -1,4 +1,3 @@
-import { faRing as icon } from "@fortawesome/free-solid-svg-icons";
 import "./style.css";
 
 // initMap is specified in the HTML as the "callback" parameter to the Google API.
@@ -55,10 +54,16 @@ function initMap(): void {
     // Try to get invitees from the query strings.
     if (theInviteeDiv) {
 
-        theInviteeDiv.innerText = (params.she && params.he ? `${params.she} & ${params.he}` : (params.she ? params.she : params.he));
+        theInviteeDiv.innerText = (params.she && params.he ? `${params.she}  &  ${params.he}` : (params.she ? params.she : params.he));
     }
 
     theSendConfirmButton?.addEventListener("click", () => {
+
+        const imageFred = document.getElementById("FredImage");
+        if (imageFred) {
+
+            imageFred.classList.remove("AnmiateFadeIn");
+        }
 
         fetch(`/set`, {
 
@@ -77,6 +82,13 @@ function initMap(): void {
             if (!data.success) {
 
                 alert(new Error(data.payload));
+            } else {
+
+                const imageFred = document.getElementById("FredImage");
+                if (imageFred) {
+
+                    imageFred.classList.add("AnmiateFadeIn");
+                }
             }
         });
     });
@@ -90,10 +102,30 @@ function initMap(): void {
             theMapElement?.classList.add("hidden");
             theConfirmElement?.classList.remove("hidden");
             theCoverElement?.classList.add("totallytransparent");
+
+            // Set button text.
+            if (theMapButton) {
+
+                theMapButton.innerText = "map";
+            }
+            if (theConfirmButton) {
+
+                theConfirmButton.innerText = "invite";
+            }
         } else {
 
             theConfirmElement?.classList.add("hidden");
             theCoverElement?.classList.remove("totallytransparent");
+
+            // Set button text.
+            if (theMapButton) {
+
+                theMapButton.innerText = "map";
+            }
+            if (theConfirmButton) {
+
+                theConfirmButton.innerText = "confirm";
+            }
         }
     });
 
@@ -107,11 +139,22 @@ function initMap(): void {
             theMapElement?.classList.remove("hidden");
             theCoverElement?.classList.remove("totallytransparent");
 
+            // Set button text.
+            if (theMapButton) {
+
+                theMapButton.innerText = "invite";
+            }
+            if (theConfirmButton) {
+
+                theConfirmButton.innerText = "confirm";
+            }
+
             // Try HTML5 geolocation.
             if (navigator.geolocation) {
 
                 navigator.geolocation.getCurrentPosition((position: GeolocationPosition) => {
 
+                    // Position the map to center on current position to devils den.
                     const pos = {
 
                         lat: position.coords.latitude,
@@ -127,36 +170,30 @@ function initMap(): void {
                     bounds.extend(pos);
                     map.fitBounds(bounds);
 
-                    geocoder.geocode({
+                    // Generate the route from the current position to the parking lot at Devils Den.
+                    try {
 
-                            location: {
+                        var request = {
+
+                            origin: pos,
+                            destination: {
 
                                 "lat": 41.23715,
                                 "lng": -73.39581727981567,
-                            } //address:"33 Pent Rd, Weston, CT 06883"
-                        })
-                        .then((result) => {
+                            },
+                            travelMode: google.maps.TravelMode.DRIVING
+                        };
+                        directionsService.route(request, (response, status) => {
 
-                            const { results } = result;
+                            if (status == "OK") {
 
-                            var request = {
-
-                                origin: pos,
-                                destination: results[0].geometry.location,
-                                travelMode: google.maps.TravelMode.DRIVING
-                            };
-                            directionsService.route(request, (response, status) => {
-
-                                if (status == "OK") {
-
-                                    directionsDisplay.setDirections(response);
-                                }
-                            });
-                        })
-                        .catch((e) => {
-
-                            alert("Geocode was not successful for the following reason: " + e);
+                                directionsDisplay.setDirections(response);
+                            }
                         });
+                    } catch(e) {
+
+                        alert("Geocode was not successful for the following reason: " + e);
+                    }
                 }, () => {
 
                     // handleLocationError(true, infoWindow, map.getCenter()!);
@@ -170,6 +207,16 @@ function initMap(): void {
 
             theMapElement?.classList.add("hidden");
             theCoverElement?.classList.remove("totallytransparent");
+            
+            // Set button text.
+            if (theMapButton) {
+
+                theMapButton.innerText = "map";
+            }
+            if (theConfirmButton) {
+
+                theConfirmButton.innerText = "confirm";
+            }
         }
     });
 
@@ -187,100 +234,83 @@ function initMap(): void {
     // If an element has a non-falsy marker, it must also have a label and message, and these become markers.
     let coordinates: { lat: number, lng: number, marker?: boolean, label?: string, message?: string}[] = [
         {
-          "lat": 41.239560541203865,
-          "lng": -73.39134439917926
+          "lat": 41.239560541203865, "lng": -73.39134439917926
         },
         {
-          "lat": 41.239384788295496,
-          "lng": -73.3912635849484
+          "lat": 41.239384788295496, "lng": -73.3912635849484
         },
         {
-          "lat": 41.23916696066689,
-          "lng": -73.39119384751402
+          "lat": 41.23916696066689, "lng": -73.39119384751402
         },
         {
-          "lat": 41.238977369362196,
-          "lng": -73.39124749169432
+          "lat": 41.238977369362196, "lng": -73.39124749169432
         },
         {
-          "lat": 41.23881198075364,
-          "lng": -73.3912635849484
+          "lat": 41.23881198075364, "lng": -73.3912635849484
         },
         {
           "lat": 41.238735337110214,
           "lng": -73.39125285611235,
           "marker": true,
           "label": "25",
-          "message": "turn left, head north along the pond to the clearing"
+          "message": "Turn left.  Head north along the pond to the clearing."
         },
         {
           "lat": 41.23880391300593,
           "lng": -73.39166055188261,
           "marker": true,
           "label": "24",
-          "message": "turn right"
+          "message": "Turn right."
         },
         {
-          "lat": 41.238525575100134,
-          "lng": -73.3920736120709
+          "lat": 41.238525575100134, "lng": -73.3920736120709
         },
         {
           "lat": 41.23853767677287,
           "lng": -73.39239547715269,
           "marker": true,
           "label": "23",
-          "message": "turn left off the main path"
+          "message": "Turn left off the main path."
         },
         {
-          "lat": 41.238578015665766,
-          "lng": -73.39262078270994
+          "lat": 41.238578015665766, "lng": -73.39262078270994
         },
         {
-          "lat": 41.23855381233301,
-          "lng": -73.39292655453764
+          "lat": 41.23855381233301, "lng": -73.39292655453764
         },
         {
-          "lat": 41.238473134492445,
-          "lng": -73.3932269619473
+          "lat": 41.238473134492445, "lng": -73.3932269619473
         },
         {
-          "lat": 41.23833194803182,
-          "lng": -73.39335570798002
+          "lat": 41.23833194803182, "lng": -73.39335570798002
         },
         {
-          "lat": 41.23799058050354,
-          "lng": -73.39337716565214
+          "lat": 41.23799058050354, "lng": -73.39337716565214
         },
         {
-          "lat": 41.23778081610329,
-          "lng": -73.39351664052091
+          "lat": 41.23778081610329, "lng": -73.39351664052091
         },
         {
-          "lat": 41.237619458414265,
-          "lng": -73.39376340375028
+          "lat": 41.237619458414265, "lng": -73.39376340375028
         },
         {
-          "lat": 41.237409692822986,
-          "lng": -73.39408526883207
+          "lat": 41.237409692822986, "lng": -73.39408526883207
         },
         {
-          "lat": 41.23725640215749,
-          "lng": -73.39443932042204
+          "lat": 41.23725640215749, "lng": -73.39443932042204
         },
         {
-          "lat": 41.23711924704677,
-          "lng": -73.39478264317594
+          "lat": 41.23711924704677, "lng": -73.39478264317594
         },
         {
-          "lat": 41.2371,
-          "lng": -73.39525471196256
+          "lat": 41.2371, "lng": -73.39525471196256
         },
         {
           "lat": 41.23715,
           "lng": -73.39581727981567,
           "marker": true,
           "label": "Entrance",
-          "message": "enter path from parking lot to the east, continue until marker 23"
+          "message": "Enter the trail east of the parking lot.  Continue until marker 23."
         }
       ];
 
@@ -341,6 +371,48 @@ function initMap(): void {
         center: centerPoint,
     });
 
+    ////////////
+    // Add the little address window in the lower left.
+    const controlDiv = document.createElement("div");
+
+    // Set CSS for the control border.
+    const controlUI = document.createElement("div");
+  
+    controlUI.style.backgroundColor = "#fff";
+    controlUI.style.border = "2px solid #fff";
+    controlUI.style.borderRadius = "3px";
+    controlUI.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
+    controlUI.style.cursor = "pointer";
+    controlUI.style.marginTop = "8px";
+    controlUI.style.marginBottom = "22px";
+    controlUI.style.opacity = "0.8";
+    controlUI.style.textAlign = "center";
+    controlUI.title = "Click to center map";
+    controlDiv.appendChild(controlUI);
+  
+    // Set CSS for the control interior.
+    const controlText = document.createElement("div");
+  
+    controlText.style.color = "rgb(25,25,25)";
+    controlText.style.fontFamily = "Roboto,Arial,sans-serif";
+    controlText.style.fontSize = "16px";
+    controlText.style.lineHeight = "38px";
+    controlText.style.paddingLeft = "5px";
+    controlText.style.paddingRight = "5px";
+    controlText.innerHTML = "Devil's Den Nature Preserve</br>33 Pent Rd, Weston, CT 06883";
+    controlUI.appendChild(controlText);
+  
+    // Setup the click event listeners: simply set the map to Devil's Den.
+    controlUI.addEventListener("click", () => {
+
+        map.setCenter({
+
+            "lat": 41.23715,
+            "lng": -73.39581727981567,
+        });
+    });
+    map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(controlDiv);
+
     // This is a special marker that cannot be removed.  The "ring".
     const ringMarker = new google.maps.Marker({
 
@@ -350,9 +422,9 @@ function initMap(): void {
         animation: google.maps.Animation.DROP,
         zIndex: 2
     });
-    attachInstructionText(ringMarker, "Rings mark the spot!");
+    attachInstructionText(ringMarker, "The ceremony will be held here.");
 
-    // Define the poly line representing the trail to the knot spot.
+    // Define the poly line representing the trail to the knotting spot.
     let flightPath = new google.maps.Polyline({
 
         path: coordinates,
@@ -385,7 +457,7 @@ function initMap(): void {
     let directionsService = new google.maps.DirectionsService();
     let directionsDisplay = new google.maps.DirectionsRenderer();
     directionsDisplay.setMap(map);
-    let geocoder = new google.maps.Geocoder();              
+    //let geocoder = new google.maps.Geocoder();              
 
     // Reset the exiting markers and process the coordinates into markers.
     const updateMarkers = () => {
@@ -442,7 +514,7 @@ function initMap(): void {
             },
             animation: google.maps.Animation.DROP,
         });
-        attachInstructionText(home, "our home in Weston");
+        attachInstructionText(home, "Our old home in Weston.");
         markers.push(home);
 
         // Also add the pent road disclaimer.
@@ -491,7 +563,7 @@ function initMap(): void {
         });
     }
 
-    // Change markers on zoom.
+    // Change markers on zoom.  Make them visible when zoom is > 18.
     const onZoom = () => {
 
         let zoom = <number>map.getZoom();
@@ -502,8 +574,10 @@ function initMap(): void {
             markers[i].setVisible(zoom > 18);
         }
     };
-    setTimeout(onZoom, 
-        1000);
     google.maps.event.addListener(map, 'zoom_changed', onZoom);
+    
+    // Initialize the zoom....
+    setTimeout(onZoom, 
+        250);
 }
 export { initMap };
