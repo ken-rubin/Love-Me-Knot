@@ -385,7 +385,6 @@ function initMap(): void {
     controlUI.style.cursor = "pointer";
     controlUI.style.marginTop = "8px";
     controlUI.style.marginBottom = "22px";
-    controlUI.style.opacity = "0.8";
     controlUI.style.textAlign = "center";
     controlUI.title = "Click to center map";
     controlDiv.appendChild(controlUI);
@@ -395,8 +394,8 @@ function initMap(): void {
   
     controlText.style.color = "rgb(25,25,25)";
     controlText.style.fontFamily = "Roboto,Arial,sans-serif";
-    controlText.style.fontSize = "16px";
-    controlText.style.lineHeight = "38px";
+    controlText.style.fontSize = "min(6vh, 4vw)";
+    controlText.style.lineHeight = "min(9vh, 6vw)";
     controlText.style.paddingLeft = "5px";
     controlText.style.paddingRight = "5px";
     controlText.innerHTML = "Devil's Den Nature Preserve</br>33 Pent Rd, Weston, CT 06883";
