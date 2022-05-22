@@ -384,7 +384,7 @@ function initMap(): void {
     controlUI.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
     controlUI.style.cursor = "pointer";
     controlUI.style.marginTop = "8px";
-    controlUI.style.marginBottom = "22px";
+    controlUI.style.marginBottom = "2px";
     controlUI.style.textAlign = "center";
     controlUI.title = "Click to center map";
     controlDiv.appendChild(controlUI);
@@ -394,8 +394,8 @@ function initMap(): void {
   
     controlText.style.color = "rgb(25,25,25)";
     controlText.style.fontFamily = "Roboto,Arial,sans-serif";
-    controlText.style.fontSize = "min(6vh, 4vw)";
-    controlText.style.lineHeight = "min(9vh, 6vw)";
+    controlText.style.fontSize = "min(4vh, 3vw)";
+    controlText.style.lineHeight = "min(6vh, 4vw)";
     controlText.style.paddingLeft = "5px";
     controlText.style.paddingRight = "5px";
     controlText.innerHTML = "Devil's Den Nature Preserve</br>33 Pent Rd, Weston, CT 06883";
@@ -411,6 +411,49 @@ function initMap(): void {
         });
     });
     map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(controlDiv);
+
+    ////////////
+    // Add the little address window in the lower left.
+    const controlDiv2 = document.createElement("div");
+
+    // Set CSS for the control border.
+    const controlUI2 = document.createElement("div");
+  
+    controlUI2.style.backgroundColor = "#fff";
+    controlUI2.style.border = "2px solid #fff";
+    controlUI2.style.borderRadius = "3px";
+    controlUI2.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
+    controlUI2.style.cursor = "pointer";
+    controlUI2.style.marginTop = "8px";
+    controlUI2.style.marginBottom = "22px";
+    controlUI2.style.textAlign = "center";
+    controlUI2.style.opacity = "0";
+
+    controlUI2.title = "Click to center map";
+    controlDiv2.appendChild(controlUI2);
+  
+    // Set CSS for the control interior.
+    const controlText2 = document.createElement("div");
+  
+    controlText2.style.color = "rgb(25,25,25)";
+    controlText2.style.fontFamily = "Roboto,Arial,sans-serif";
+    controlText2.style.fontSize = "min(4vh, 3vw)";
+    controlText2.style.lineHeight = "min(6vh, 4vw)";
+    controlText2.style.paddingLeft = "5px";
+    controlText2.style.paddingRight = "5px";
+    controlText2.innerHTML = `Click on the markers (in red)<br/>for hiking directions.`;
+    controlUI2.appendChild(controlText2);
+  
+    // Setup the click event listeners: simply set the map to Devil's Den.
+    controlUI2.addEventListener("click", () => {
+
+        map.setCenter({
+
+            "lat": 41.23715,
+            "lng": -73.39581727981567,
+        });
+    });
+    map.controls[google.maps.ControlPosition.LEFT_CENTER].push(controlDiv2);
 
     // This is a special marker that cannot be removed.  The "ring".
     const ringMarker = new google.maps.Marker({
@@ -570,7 +613,16 @@ function initMap(): void {
         // iterate over markers and call setVisible
         for (let i = 0; i < markers.length; i++) {
         
-            markers[i].setVisible(zoom > 18);
+            markers[i].setVisible(zoom > 15);
+        }
+
+        // Fade in or out the directions to click on the markers...
+        if (zoom > 15) {
+
+            controlUI2.classList.add("AnmiateFadeIn");
+        } else {
+
+            controlUI2.classList.remove("AnmiateFadeIn");
         }
     };
     google.maps.event.addListener(map, 'zoom_changed', onZoom);

@@ -204,7 +204,7 @@ body {
     max-height: min(18vh, 12vw);
     width: auto;
     height: auto;
-    opacity: 0.001;
+    opacity: 0;
     content: url(./fred.png);
     margin-top: 1vh;
 }
@@ -218,7 +218,7 @@ body {
 
     0% {
 
-        opacity:0.001;
+        opacity:0;
     }
     100% {
 
